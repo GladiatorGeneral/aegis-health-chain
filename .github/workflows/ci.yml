@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Cache pip and HuggingFace caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.cache/huggingface/transformers
+            ~/.cache/huggingface/datasets
+          key: ${{ runner.os }}-pip-hf-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-hf-
+
+      - name: Install minimal dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      - name: Run tests (skip heavy HF models)
+        env:
+          SKIP_HF_MODELS: '1'
+          HUGGINGFACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          pytest -q
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install minimal dependencies
+        - name: Cache pip and HF caches
+          uses: actions/cache@v4
+          with:
+            path: |
+              ~/.cache/pip
+              ~/.cache/huggingface/transformers
+              ~/.cache/huggingface/datasets
+            key: ${{ runner.os }}-pip-hf-${{ hashFiles('requirements.txt') }}
+
+        - name: Install minimal dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install pytest
+
+      - name: Run tests (skip heavy HF models)
+        env:
+          SKIP_HF_MODELS: '1'
+          HUGGINGFACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          pytest -q

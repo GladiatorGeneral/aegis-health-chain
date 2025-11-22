@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aegis-health-chain"
+version = "0.1.0"
+description = "AI-powered health forecasting with FHIR and HuggingFace"
+authors = [
+    {name = "Aegis Health Team", email = "team@aegishealth.org"}
+]
+dependencies = [
+    "torch>=2.0.0",
+    "transformers>=4.30.0",
+    "datasets>=2.12.0",
+    "fhir.resources>=6.4.0",
+    "pandas>=1.5.0",
+    "numpy>=1.24.0",
+    "scikit-learn>=1.2.0",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py39']

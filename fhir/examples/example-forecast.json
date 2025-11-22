@@ -1,0 +1,59 @@
+{
+  "resourceType": "RiskAssessment",
+  "id": "example-asthma-forecast",
+  "meta": {
+    "profile": ["http://aegis.health/fhir/StructureDefinition/aegis-health-forecast"]
+  },
+  "status": "final",
+  "subject": {
+    "reference": "Patient/example"
+  },
+  "method": {
+    "coding": [{
+      "system": "http://aegis.health/fhir/CodeSystem/forecast-method-cs",
+      "code": "bert-clinical",
+      "display": "Clinical BERT Model"
+    }]
+  },
+  "occurrenceDateTime": "2024-01-15T10:30:00Z",
+  "prediction": [{
+    "outcome": {
+      "coding": [{
+        "system": "http://snomed.info/sct",
+        "code": "195967001",
+        "display": "Asthma"
+      }]
+    },
+    "probabilityDecimal": 0.76,
+    "whenRange": {
+      "low": {
+        "value": "2024-01-20"
+      },
+      "high": {
+        "value": "2024-02-20"
+      }
+    }
+  }],
+  "extension": [{
+    "url": "http://aegis.health/fhir/StructureDefinition/forecast-horizon",
+    "valueDuration": {
+      "value": 30,
+      "unit": "days"
+    }
+  }, {
+    "url": "http://aegis.health/fhir/StructureDefinition/model-metadata",
+    "extension": [{
+      "url": "modelName",
+      "valueString": "Bio_ClinicalBERT_FineTuned"
+    }, {
+      "url": "modelVersion", 
+      "valueString": "2.1.0"
+    }, {
+      "url": "trainingData",
+      "valueString": "MIMIC-III + Institutional EHR"
+    }, {
+      "url": "confidenceScore",
+      "valueDecimal": 0.89
+    }]
+  }]
+}

@@ -1,0 +1,47 @@
+name: CI (Full)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  full-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: 3.9
+          use-mamba: true
+          environment-file: environment.yml
+          activate-environment: aegis-health
+          environment-name: aegis-health
+
+      - name: Cache conda/pip and HuggingFace caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.conda/pkgs
+            ~/.cache/pip
+            ~/.cache/huggingface/transformers
+            ~/.cache/huggingface/datasets
+          key: ${{ runner.os }}-conda-pip-hf-${{ hashFiles('environment.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-conda-pip-hf-
+
+      - name: Install editable package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: Run full tests
+        env:
+          HUGGINGFACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          pytest -q
